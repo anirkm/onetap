@@ -135,7 +135,7 @@ exports.run = async (client, message, args) => {
         )
       );
     }
-    let verifiedRole = message.guild.roles.cache.find(
+    let verifiedRole = await message.guild.roles.cache.find(
       (r) => r.id === "809087546088357908"
       //(r) => r.name === "Verified"
     );

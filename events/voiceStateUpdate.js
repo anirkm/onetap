@@ -6,10 +6,11 @@ module.exports = async (client, oldMember, newMember) => {
   );
   let us = newMember.guild.members.cache.get(newMember.id);
 
-  let jailRole = newMember.guild.roles.cache.find((r) => r.name === "Jail");
-  let verified = newMember.guild.roles.cache.find(
+  let jailRole = await newMember.guild.roles.cache.find(
+    (r) => r.id === "791081032207695893"
+  );
+  let verified = await newMember.guild.roles.cache.find(
     (r) => r.id === "809087546088357908"
-    //(r) => r.name === "Jail"
   );
   let everyonerole = newMember.guild.roles.everyone;
   if (!jailRole) return console.log("no jail role");
@@ -59,7 +60,9 @@ module.exports = async (client, oldMember, newMember) => {
           ],
         })
         .then(async function (chan) {
-          newMember.member.voice.setChannel(chan);
+          try {
+            newMember.member.voice.setChannel(chan);
+          } catch {}
           await client.db
             .prepare("INSERT INTO channels VALUES (?, ?, ?)")
             .run(newMember.guild.id, chan.id, newMember.id);

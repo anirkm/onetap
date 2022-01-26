@@ -7,13 +7,16 @@ module.exports = async (client, oldMember, newMember) => {
   let us = newMember.guild.members.cache.get(newMember.id);
 
   let jailRole = newMember.guild.roles.cache.find(
-    (r) => r.id === "791081032207695893"
+    //(r) => r.id === "791081032207695893"
+    (r) => r.name === "Jail"
   );
   let verified = newMember.guild.roles.cache.find(
-    (r) => r.name === "✦ Verified・"
+    //(r) => r.id === "809087546088357908"
+    (r) => r.name === "Jail"
   );
   let everyonerole = newMember.guild.roles.everyone;
   if (!jailRole) return console.log("no jail role");
+  if (!verified) return console.log("no verified role");
 
   if (newUserChannel) {
     if (newUserChannel.name == "One Tap" && newUserChannel.position == 0) {
@@ -45,7 +48,12 @@ module.exports = async (client, oldMember, newMember) => {
             },
             {
               id: everyonerole,
-              deny: ["VIEW_CHANNEL"],
+              deny: [
+                "VIEW_CHANNEL",
+                "MUTE_MEMBERS",
+                "DEAFEN_MEMBERS",
+                "MOVE_MEMBERS",
+              ],
             },
             {
               id: verified,

@@ -134,13 +134,13 @@ exports.run = async (client, message, args) => {
       );
     }
     let verifiedRole = message.guild.roles.cache.find(
-      //(r) => r.id === "809087546088357908"
-      (r) => r.name === "Verified"
+      (r) => r.id === "809087546088357908"
+      //(r) => r.name === "Verified"
     );
     if (ab == verifiedRole) {
       return message.channel.send(
         textEmbed(
-          `:x: | You cannot perform this action on the ${verifiedRole}!`
+          `:x: | You cannot perform this action on the ${verifiedRole} role!`
         )
       );
     }

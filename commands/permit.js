@@ -47,11 +47,12 @@ exports.run = async (client, message, args) => {
     var guildIDonetap = onetap.guildID;
   } catch (err) {
     console.log(err);
-    return message.channel.send(
+    message.channel.send(
       textEmbed(
-        ":x: | Couldn't fetch the channel please make a new one! (make sure that your current voice channel is a One-Tap"
+        ":x: | Couldn't fetch the channel please make a new one! (make sure that your current voice channel is a One-Tap )"
       )
     );
+    return;
   }
 
   if (onetap.ownerID !== message.author.id) {

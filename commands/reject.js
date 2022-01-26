@@ -103,7 +103,9 @@ exports.run = async (client, message, args) => {
                   if (channel.type !== "voice") return;
                   if (channel.parent !== mainCate) return;
                   if (channel.name === "One Tap" && channel.position == 0) {
-                    await target.voice.setChannel(channel);
+                    try {
+                      await target.voice.setChannel(channel);
+                    } catch {}
                   }
                 }
               });
@@ -161,7 +163,9 @@ exports.run = async (client, message, args) => {
               if (channel.type !== "voice") return;
               if (channel.parent !== mainCate) return;
               if (channel.name === "One Tap" && channel.position == 0) {
-                await ab.voice.setChannel(channel);
+                try {
+                  await ab.voice.setChannel(channel);
+                } catch {}
               }
             }
           });
@@ -179,7 +183,9 @@ exports.run = async (client, message, args) => {
                 if (channel.type !== "voice") return;
                 if (channel.parent !== mainCate) return;
                 if (channel.name === "One Tap" && channel.position == 0) {
-                  await member.voice.setChannel(channel);
+                  try {
+                    await member.voice.setChannel(channel);
+                  } catch {}
                 }
               }
             });

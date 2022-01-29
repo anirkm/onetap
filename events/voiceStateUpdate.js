@@ -46,12 +46,7 @@ module.exports = async (client, oldMember, newMember) => {
             },
             {
               id: everyonerole,
-              deny: [
-                "VIEW_CHANNEL",
-                "MUTE_MEMBERS",
-                "DEAFEN_MEMBERS",
-                "MOVE_MEMBERS",
-              ],
+              deny: ["VIEW_CHANNEL"],
             },
             {
               id: verified,

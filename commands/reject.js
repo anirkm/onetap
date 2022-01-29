@@ -90,6 +90,9 @@ exports.run = async (client, message, args) => {
         try {
           await authorChannel.updateOverwrite(target, {
             CONNECT: false,
+            MUTE_MEMBERS: false,
+            DEAFEN_MEMBERS: false,
+            MOVE_MEMBERS: false,
             VIEW_CHANNEL: null,
             SPEAK: null,
           });
@@ -147,7 +150,14 @@ exports.run = async (client, message, args) => {
       );
     }
     authorChannel
-      .updateOverwrite(ab, { CONNECT: false, VIEW_CHANNEL: null, SPEAK: null })
+      .updateOverwrite(ab, {
+        CONNECT: false,
+        MUTE_MEMBERS: false,
+        DEAFEN_MEMBERS: false,
+        MOVE_MEMBERS: false,
+        VIEW_CHANNEL: null,
+        SPEAK: null,
+      })
       .then((test) => {
         message.reply(
           textEmbed(

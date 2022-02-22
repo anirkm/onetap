@@ -97,6 +97,11 @@ exports.run = async (client, message, args) => {
             )
           );
         }
+        if (target == message.guild.roles.everyone) {
+          return message.channel.send(
+            textEmbed(`:x: | You cannot perform this action on everyone :')`)
+          );
+        }
       }
       if (target) {
         try {

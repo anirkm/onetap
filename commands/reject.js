@@ -149,6 +149,11 @@ exports.run = async (client, message, args) => {
         )
       );
     }
+    if (ab == message.guild.roles.everyone) {
+      return message.channel.send(
+        textEmbed(`:x: | You cannot perform this action on everyone :')`)
+      );
+    }
     authorChannel
       .updateOverwrite(ab, {
         CONNECT: false,

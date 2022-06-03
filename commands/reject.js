@@ -9,7 +9,7 @@ exports.run = async (client, message, args) => {
     const embed = new Discord.MessageEmbed()
       .setColor("RANDOM")
       .setDescription(text);
-    return embed;
+    return { embeds: [embed] };
   }
 
   function usageEmbed(command, usage, example) {
@@ -28,7 +28,7 @@ exports.run = async (client, message, args) => {
         `\`${client.prefix} ${command.toLowerCase()} ${example}\``
       )
       .setColor("RANDOM");
-    return embed;
+    return { embeds: [embed] };
   }
 
   if (!args[0])
@@ -88,7 +88,7 @@ exports.run = async (client, message, args) => {
       if (target) {
         if (onetap.ownerID === target.id) continue;
         try {
-          await authorChannel.updateOverwrite(target, {
+          await authorChannel.permissionOverwrites.edit(target, {
             CONNECT: false,
             MUTE_MEMBERS: false,
             DEAFEN_MEMBERS: false,
@@ -155,7 +155,7 @@ exports.run = async (client, message, args) => {
       );
     }
     authorChannel
-      .updateOverwrite(ab, {
+      .permissionOverwrites.edit(ab, {
         CONNECT: false,
         MUTE_MEMBERS: false,
         DEAFEN_MEMBERS: false,

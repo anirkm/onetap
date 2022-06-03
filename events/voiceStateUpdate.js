@@ -7,10 +7,10 @@ module.exports = async (client, oldMember, newMember) => {
   let us = newMember.guild.members.cache.get(newMember.id);
 
   let jailRole = await newMember.guild.roles.cache.find(
-    (r) => r.id === "791081032207695893"
+    (r) => r.name === "zabzoub"
   );
   let verified = await newMember.guild.roles.cache.find(
-    (r) => r.id === "809087546088357908"
+    (r) => r.name === "Muted"
   );
   let everyonerole = newMember.guild.roles.everyone;
   if (!jailRole) return console.log("no jail role");
@@ -20,7 +20,7 @@ module.exports = async (client, oldMember, newMember) => {
     if (newUserChannel.name == "One Tap" && newUserChannel.position == 0) {
       newMember.guild.channels
         .create(`${us.displayName}'s Channel`, {
-          type: "voice",
+          type: "GUILD_VOICE",
           parent: cate,
           userLimit: 0,
           permissionOverwrites: [
@@ -115,7 +115,7 @@ module.exports = async (client, oldMember, newMember) => {
     oldMember.guild.channels.cache.map(async (channel) => {
       if (channel.parent === cate) {
         if (channel.name === "One Tap" && channel.position == 0) return;
-        if (channel.type !== "voice") return;
+        if (channel.type !== "GUILD_VOICE") return;
         if (channel.parent !== cate) return;
         if (channel.members.size == 0) {
           setTimeout(async function () {

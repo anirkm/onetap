@@ -154,8 +154,8 @@ exports.run = async (client, message, args) => {
         textEmbed(`:x: | You cannot perform this action on everyone :')`)
       );
     }
-    authorChannel
-      .permissionOverwrites.edit(ab, {
+    authorChannel.permissionOverwrites
+      .edit(ab, {
         CONNECT: false,
         MUTE_MEMBERS: false,
         DEAFEN_MEMBERS: false,
@@ -175,12 +175,14 @@ exports.run = async (client, message, args) => {
         try {
           message.guild.channels.cache.map(async (channel) => {
             if (channel.parent === mainCate) {
-              if (channel.type !== "voice") return;
+              if (channel.type !== "GUILD_VOICE") return;
               if (channel.parent !== mainCate) return;
               if (channel.name === "One Tap" && channel.position == 0) {
                 try {
                   await ab.voice.setChannel(channel);
-                } catch {}
+                } catch (err) {
+                  console.log(err);
+                }
               }
             }
           });
@@ -195,12 +197,14 @@ exports.run = async (client, message, args) => {
           try {
             message.guild.channels.cache.map(async (channel) => {
               if (channel.parent === mainCate) {
-                if (channel.type !== "voice") return;
+                if (channel.type !== "GUILD_VOICE") return;
                 if (channel.parent !== mainCate) return;
                 if (channel.name === "One Tap" && channel.position == 0) {
                   try {
                     await member.voice.setChannel(channel);
-                  } catch {}
+                  } catch (err) {
+                    console.log(err);
+                  }
                 }
               }
             });

@@ -332,7 +332,7 @@ exports.run = async (client, message, args) => {
           const rmBl = client.db.prepare(`DELETE FROM bl WHERE userID = ?`);
           var msg = await m.reply(textEmbed(`:timer: | Please wait ...`));
           await rmBl.run(message.author.id);
-          collector.stop();
+          blClear.stop();
           return msg.edit(
             textEmbed(
               `:white_check_mark: | A total of __${BlCount}__ users were successfully removed from your blacklist`
@@ -340,7 +340,7 @@ exports.run = async (client, message, args) => {
           );
         } catch (error) {
           console.log(error);
-          collector.stop();
+          blClear.stop();
         }
       }
     });

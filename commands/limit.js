@@ -90,24 +90,45 @@ exports.run = async (client, message, args) => {
       })
     );
 
-  authorChannel.edit({ userLimit: ab }).then((test) => {
-    if (ab == 0) {
-      message.channel.send({
-        embeds: [
-          textEmbed(
-            `:white_check_mark: | Channel user limit updated to \`unlimited\` users successfully.`
-          ),
-        ],
-      });
-    } else {
-      message.channel.send({
-        embeds: [
-          textEmbed(
-            `:white_check_mark: | Channel user limit updated to \`${ab}\` users successfully.`
-          ),
-        ],
-      });
-    }
-  });
+  authorChannel
+    .edit({ userLimit: ab })
+    .then((test) => {
+      if (ab == 0) {
+        message.channel.send({
+          embeds: [
+            textEmbed(
+              `:white_check_mark: | Channel user limit updated to \`unlimited\` users successfully.`
+            ),
+          ],
+        });
+      } else {
+        message.channel.send({
+          embeds: [
+            textEmbed(
+              `:white_check_mark: | Channel user limit updated to \`${ab}\` users successfully.`
+            ),
+          ],
+        });
+      }
+    })
+    .catch(function () {
+      if (ab > 25) {
+        message.channel.send({
+          embeds: [
+            textEmbed(
+              !`:x: | Couldn't update the channel limit if there is active camera users **25** is the maximum user limit!`
+            ),
+          ],
+        });
+      } else {
+        message.channel.send({
+          embeds: [
+            textEmbed(
+              `:x: | Couldn't update the channel limit. Please try again.`
+            ),
+          ],
+        });
+      }
+    });
 };
 exports.aliases = ["setlimit"];

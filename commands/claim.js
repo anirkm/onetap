@@ -9,23 +9,27 @@ exports.run = async (client, message, args) => {
   }
 
   function usageEmbed(command, usage, example) {
-    const embed = new Discord.MessageEmbed()
-      .setAuthor(
-        message.author.tag,
-        message.author.avatarURL({ dynamic: true })
-      )
-      .setTitle(`Invalid arguments`)
-      .addField(
-        "Usage",
-        `\`${client.prefix} ${command.toLowerCase()} ${usage}\``
-      )
-      .addField(
-        "Example",
-        `\`${client.prefix} ${command.toLowerCase()} ${example}\``
-      )
-      .setColor("RANDOM");
-    return embed;
-  }
+		const embed = new Discord.MessageEmbed()
+			.setAuthor(
+				message.author.tag,
+				message.author.avatarURL({
+					dynamic: true,
+				})
+			)
+			.setTitle(`Invalid arguments`)
+			.addField(
+				"Usage",
+				`\`${client.prefix} ${command.toLowerCase()} ${usage}\``
+			)
+			.addField(
+				"Example",
+				`\`${client.prefix} ${command.toLowerCase()} ${example}\``
+			)
+			.setColor("RANDOM");
+		return embed;
+	}
+
+
 
   let guild = message.guild;
   let ided = message.guild.id;
@@ -66,10 +70,25 @@ exports.run = async (client, message, args) => {
     );
   }
 
+  let currOwner = await guild.members.cache.get(onetap.ownerID);
+
+  if (!currOwner) {
+    const updateOwner2 = client.db.prepare(
+      `UPDATE channels SET ownerID = ? WHERE channelID = ?`
+    );
+    updateOwner2.run(message.author.id, onetap.channelID);
+    return message.channel.send({
+      embeds: [
+        textEmbed(
+          `:star2: | Congrats! channel claimed successfully, the channel ownership is now yours!`
+        ),
+      ],
+    });
+  }
+
   if (
-    guild.members.cache.get(onetap.ownerID).voice.channel &&
-    guild.members.cache.get(onetap.ownerID).voice.channel.id ===
-      onetap.channelID
+    currOwner.voice.channel &&
+    currOwner.voice.channel.id === onetap.channelID
   ) {
     return message.channel.send({
       embeds: [

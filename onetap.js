@@ -1,5 +1,5 @@
 const { Client, Collection } = require("discord.js");
-const { token, prefix } = require("./config");
+const { token, prefix, dev } = require("./config");
 const db = require("./utils/DBInit.js");
 const fs = require("fs");
 
@@ -88,4 +88,4 @@ fs.readdir("./commands/", (err, files) => {
 client.on("error", console.error);
 client.on("warn", console.warn);
 
-client.login(token);
+client.login(dev);

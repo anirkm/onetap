@@ -86,6 +86,18 @@ exports.run = async (client, message, args) => {
             )
           );
         }
+        let currOwner = client.getUserFromMention(
+          message.channel.guild,
+          onetap.ownerID
+        );
+
+        if (!currOwner) {
+          return message.reply(
+            textEmbed(
+              `:bell: | The owner of this channel is not in the server anymore. Be the first one to claim it.`
+            )
+          );
+        }
         return message.reply(
           textEmbed(
             `:bell: | ${client.getUserFromMention(
@@ -156,9 +168,8 @@ exports.run = async (client, message, args) => {
 
     ownerCollection.on("collect", async (m) => {
       if (decline.includes(m.content.toLowerCase())) {
-        return func.textMsg(
-          message,
-          ":x: | **Action cancelled** You've replied with no"
+        return m.reply(
+          textEmbed(":x: | **Action cancelled** You've replied with no")
         );
       }
 
@@ -183,7 +194,7 @@ exports.run = async (client, message, args) => {
 
     ownerCollection.on("end", (collected, err) => {
       if (err == "time") {
-        return m.reply(
+        return message.reply(
           textEmbed(
             "⏲️ | **Action Cancelled** 30 seconds have passed and i got no response"
           )

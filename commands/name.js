@@ -3,25 +3,6 @@ const cooldowns = new Map();
 const humanizeDuration = require("humanize-duration");
 
 exports.run = async (client, message, args) => {
-  const cooldown = cooldowns.get(message.author.id);
-
-  if (cooldown) {
-    const remaining = humanizeDuration(cooldown - Date.now(), { round: true });
-    return message.channel
-      .send(
-        textEmbed(
-          `:timer: | You have to wait **${remaining}** before you can rename your channel again`
-        )
-      )
-      .then((msg) => {
-        setTimeout(function () {
-          msg.delete();
-          message.delete();
-        }, 10000);
-      })
-      .catch();
-  }
-
   function textEmbed(text) {
     const embed = new Discord.MessageEmbed()
       .setColor("RANDOM")
@@ -65,6 +46,27 @@ exports.run = async (client, message, args) => {
     );
   let authorChannel = message.member.voice.channel;
 
+  const cooldown = cooldowns.get(authorChannel.id);
+
+  if (cooldown) {
+    const remaining = humanizeDuration(cooldown - Date.now(), { round: true });
+    return message.channel
+      .send(
+        textEmbed(
+          `:timer: | You have to wait **${remaining}** before you can rename your channel again`
+        )
+      )
+      .then((msg) => {
+        setTimeout(function () {
+          try {
+            msg.delete();
+            message.delete();
+          } catch {}
+        }, 10000);
+      })
+      .catch();
+  }
+
   try {
     onetap = await client.db
       .prepare("SELECT * FROM channels WHERE channelID = ?")
@@ -91,14 +93,23 @@ exports.run = async (client, message, args) => {
     );
   }
 
-  authorChannel.setName(chanName).then((test) => {
-    message.channel.send(
-      textEmbed(
-        `:white_check_mark: | Channel name changed to \`${chanName}\` successfully`
-      )
-    );
-    cooldowns.set(message.author.id, Date.now() + 5 * 60 * 1000);
-    setTimeout(() => cooldowns.delete(message.author.id), 5 * 60 * 1000);
-  });
+  authorChannel
+    .setName(chanName)
+    .then((test) => {
+      message.channel.send(
+        textEmbed(
+          `:white_check_mark: | Channel name changed to \`${chanName}\` successfully`
+        )
+      );
+      cooldowns.set(authorChannel.id, Date.now() + 5 * 60 * 1000);
+      setTimeout(() => cooldowns.delete(authorChannel.id), 5 * 60 * 1000);
+    })
+    .catch(async (err) => {
+      return message.reply(
+        textEmbed(
+          `:eye:  | Due to Discord TOS, a channel name can't contain words that discord finds unacceptable `
+        )
+      );
+    });
 };
 exports.aliases = ["rename"];

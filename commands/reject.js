@@ -32,7 +32,7 @@ exports.run = async (client, message, args) => {
   }
 
   if (!args[0])
-    return message.channel.send(usageEmbed("permit", "(user)", "@Yatsu"));
+    return message.channel.send(usageEmbed("reject", "(user)", "@Yatsu"));
 
   let guild = message.guild;
 
@@ -108,7 +108,9 @@ exports.run = async (client, message, args) => {
                   if (channel.name === "One Tap" && channel.position == 0) {
                     try {
                       await target.voice.setChannel(channel);
-                    } catch {}
+                    } catch (err) {
+                      console.log(err);
+                    }
                   }
                 }
               });
@@ -201,7 +203,10 @@ exports.run = async (client, message, args) => {
                 if (channel.parent !== mainCate) return;
                 if (channel.name === "One Tap" && channel.position == 0) {
                   try {
-                    await member.voice.setChannel(channel);
+                    await member.voice.setChannel(
+                      channel,
+                      `Rejected by ${authorChannel.tag}`
+                    );
                   } catch (err) {
                     console.log(err);
                   }

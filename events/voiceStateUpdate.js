@@ -1,3 +1,7 @@
+const bf = require("discord-bitfield-calculator");
+
+const { Permissions } = require("discord.js");
+
 module.exports = async (client, oldMember, newMember) => {
   let newUserChannel = newMember.channel;
   let oldUserChannel = oldMember.channel;
@@ -7,17 +11,50 @@ module.exports = async (client, oldMember, newMember) => {
   let us = newMember.guild.members.cache.get(newMember.id);
 
   let jailRole = await newMember.guild.roles.cache.find(
-    (r) => r.id === "791081032207695893" //791081032207695893
+    (r) => r.id === "859855723734106112" //791081032207695893
   );
   let verified = await newMember.guild.roles.cache.find(
-    (r) => r.id === "809087546088357908" //809087546088357908
+    (r) => r.id === "859855686333759538" //809087546088357908
   );
   let everyonerole = newMember.guild.roles.everyone;
   if (!jailRole) return console.log("no jail role");
   if (!verified) return console.log("no verified role");
 
   if (newUserChannel) {
-    if (newUserChannel.name == "One Tap" && newUserChannel.position == 0) {
+    if (newUserChannel.name != "One Tap" && newUserChannel.position != 0) {
+      let permMap = await newUserChannel.permissionOverwrites.cache;
+      try {
+        let permMap = await newUserChannel.permissionOverwrites.cache;
+      } catch (e) {
+        console.log(err);
+        return;
+      }
+
+      if (!permMap) return console.log("no permmap");
+
+      if (
+        Object.fromEntries(permMap)[newMember.id].deny.any(
+          Permissions.FLAGS.CONNECT,
+          true
+        )
+      ) {
+        try {
+          await newMember.member.voice.disconnect(
+            "Tried to bypass onetap rejection."
+          );
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+  }
+
+  if (newUserChannel) {
+    if (
+      newUserChannel.name == "One Tap" &&
+      newUserChannel.position == 0 &&
+      newUserChannel.parent == cate
+    ) {
       newMember.guild.channels
         .create(`${us.displayName}'s Channel`, {
           type: "GUILD_VOICE",
@@ -56,7 +93,7 @@ module.exports = async (client, oldMember, newMember) => {
         })
         .then(async function (chan) {
           try {
-            newMember.member.voice.setChannel(chan);
+            newMember.member.voice.setChannel(chan, "Onetap creation.");
           } catch {}
           await client.db
             .prepare("INSERT INTO channels VALUES (?, ?, ?)")
@@ -74,7 +111,7 @@ module.exports = async (client, oldMember, newMember) => {
               var BlUser = await newMember.guild.members.cache.get(Bliend.BlID);
               if (BlUser) {
                 try {
-                  await chan.updateOverwrite(BlUser, {
+                  await chan.permissionOverwrites.edit(BlUser, {
                     CONNECT: false,
                     SPEAK: false,
                   });
@@ -97,7 +134,7 @@ module.exports = async (client, oldMember, newMember) => {
               var FRUser = await newMember.guild.members.cache.get(friend.frID);
               if (FRUser) {
                 try {
-                  await chan.updateOverwrite(FRUser, {
+                  await chan.permissionOverwrites.edit(FRUser, {
                     CONNECT: true,
                     SPEAK: true,
                     VIEW_CHANNEL: true,

@@ -32,6 +32,9 @@ module.exports = async (client, oldMember, newMember) => {
 
       if (!permMap) return console.log("no permmap");
 
+      if (!Object.fromEntries(permMap)[newMember.id])
+        return console.log("no permmap object");
+
       if (
         Object.fromEntries(permMap)[newMember.id].deny.any(
           Permissions.FLAGS.CONNECT,

@@ -20,6 +20,34 @@ module.exports = async (client, oldMember, newMember) => {
   if (!jailRole) return console.log("no jail role");
   if (!verified) return console.log("no verified role");
 
+  if (newUserChannel) {
+    if (
+      newUserChannel.name != "One Tap" &&
+      newUserChannel.position != 0 &&
+      newUserChannel.parent == cate
+    ) {
+      let permMap = await newUserChannel.permissionOverwrites.cache;
+
+      if (!permMap) return;
+
+      if (!Object.fromEntries(permMap)[newMember.id].deny) return;
+
+      if (
+        Object.fromEntries(permMap)[newMember.id].deny.any(
+          Permissions.FLAGS.CONNECT,
+          true
+        )
+      ) {
+        try {
+          await newMember.member.voice.disconnect(
+            "Tried to bypass onetap rejection."
+          );
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+  }
 
   if (newUserChannel) {
     if (

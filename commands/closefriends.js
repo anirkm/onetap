@@ -393,41 +393,43 @@ exports.run = async (client, message, args) => {
         `:question: | Are you sure u want to remove ${frCount} user from your close friends, this action is irreversible! (reply with yes or no within 30 seconds)`
       )
     );
-    const answers = ["y", "yes", "n", "no"];
-    const filter = (m) =>
-      answers.includes(m.content.toLowerCase()) &&
-      m.author.id === message.author.id;
+    const filter = (m) => m.author.id == message.author.id;
 
-    const collector = confirmation.channel.createMessageCollector(filter, {
-      max: 1,
+    const approve = ["yes", "y", "we", "oui", "yessir"];
+    const decline = ["no", "n", "nn", "nah", "nope"];
+
+    const cfClear = message.channel.createMessageCollector({
+      filter,
       time: 30000,
+      max: 1,
+      errors: ["time"],
     });
 
-    collector.on("collect", async (m) => {
-      if (
-        m.content.toLowerCase() === answers[2] ||
-        m.content.toLowerCase() === answers[3]
-      ) {
+    cfClear.on("collect", async (m) => {
+      if (decline.includes(m.content.toLowerCase())) {
         return m.reply(
-          textEmbed(`:x: | Action has been successfully cancelled.`)
+          textEmbed(":x: | **Action cancelled** You've replied with no")
         );
       }
-
-      try {
-        const rmFr = client.db.prepare(`DELETE FROM cf WHERE userID = ?`);
-        var msg = await m.reply(textEmbed(`:timer: | Please wait ...`));
-        await rmFr.run(message.author.id);
-        return msg.edit(
-          textEmbed(
-            `:white_check_mark: | A total of __${frCount}__ close friends were removed from your account`
-          )
-        );
-      } catch (error) {
-        console.log(error);
+      if (approve.includes(m.content.toLowerCase())) {
+        try {
+          const rmFr = client.db.prepare(`DELETE FROM cf WHERE userID = ?`);
+          var msg = await m.reply(textEmbed(`:timer: | Please wait ...`));
+          await rmFr.run(message.author.id);
+          cfClear.stop();
+          return msg.edit(
+            textEmbed(
+              `:white_check_mark: | A total of __${frCount}__ close friends were removed from your account`
+            )
+          );
+        } catch (error) {
+          cfClear.stop();
+          console.log(error);
+        }
       }
     });
 
-    collector.on("end", (collected, reason) => {
+    cfClear.on("end", (collected, reason) => {
       if (reason === "time") {
         return confirmation.edit(
           textEmbed(

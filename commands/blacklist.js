@@ -307,41 +307,45 @@ exports.run = async (client, message, args) => {
         `:question: | Are you sure you want to remove ${BlCount} user from your blacklist, this action is irreversible! (reply with yes or no within 30 seconds)`
       )
     );
-    const answers = ["y", "yes", "n", "no"];
-    const filter = (m) =>
-      answers.includes(m.content.toLowerCase()) &&
-      m.author.id === message.author.id;
 
-    const collector = confirmation.channel.createMessageCollector(filter, {
-      max: 1,
+    const filter = (m) => m.author.id == message.author.id;
+
+    const approve = ["yes", "y", "we", "oui", "yessir"];
+    const decline = ["no", "n", "nn", "nah", "nope"];
+
+    const blClear = message.channel.createMessageCollector({
+      filter,
       time: 30000,
+      max: 1,
+      errors: ["time"],
     });
 
-    collector.on("collect", async (m) => {
-      if (
-        m.content.toLowerCase() === answers[2] ||
-        m.content.toLowerCase() === answers[3]
-      ) {
+    blClear.on("collect", async (m) => {
+      if (decline.includes(m.content.toLowerCase())) {
         return m.reply(
-          textEmbed(`:x: | Action has been successfully cancelled.`)
+          textEmbed(":x: | **Action cancelled** You've replied with no")
         );
       }
 
-      try {
-        const rmBl = client.db.prepare(`DELETE FROM bl WHERE userID = ?`);
-        var msg = await m.reply(textEmbed(`:timer: | Please wait ...`));
-        await rmBl.run(message.author.id);
-        return msg.edit(
-          textEmbed(
-            `:white_check_mark: | A total of __${BlCount}__ users were successfully removed from your blacklist`
-          )
-        );
-      } catch (error) {
-        console.log(error);
+      if (approve.includes(m.content.toLowerCase())) {
+        try {
+          const rmBl = client.db.prepare(`DELETE FROM bl WHERE userID = ?`);
+          var msg = await m.reply(textEmbed(`:timer: | Please wait ...`));
+          await rmBl.run(message.author.id);
+          collector.stop();
+          return msg.edit(
+            textEmbed(
+              `:white_check_mark: | A total of __${BlCount}__ users were successfully removed from your blacklist`
+            )
+          );
+        } catch (error) {
+          console.log(error);
+          collector.stop();
+        }
       }
     });
 
-    collector.on("end", (collected, reason) => {
+    blClear.on("end", (collected, reason) => {
       if (reason === "time") {
         return confirmation.edit(
           textEmbed(

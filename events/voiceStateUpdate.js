@@ -30,7 +30,7 @@ module.exports = async (client, oldMember, newMember) => {
 
       if (!permMap) return;
 
-      if (!Object.fromEntries(permMap)[newMember.id].deny) return;
+      if (!Object.fromEntries(permMap)[newMember.id]) return;
 
       if (
         Object.fromEntries(permMap)[newMember.id].deny.any(

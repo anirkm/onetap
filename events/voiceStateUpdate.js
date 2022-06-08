@@ -11,10 +11,10 @@ module.exports = async (client, oldMember, newMember) => {
   let us = newMember.guild.members.cache.get(newMember.id);
 
   let jailRole = await newMember.guild.roles.cache.find(
-    (r) => r.id === "859855723734106112" //791081032207695893
+    (r) => r.id === "791081032207695893" //791081032207695893
   );
   let verified = await newMember.guild.roles.cache.find(
-    (r) => r.id === "859855686333759538" //809087546088357908
+    (r) => r.id === "809087546088357908" //809087546088357908
   );
   let everyonerole = newMember.guild.roles.everyone;
   if (!jailRole) return console.log("no jail role");

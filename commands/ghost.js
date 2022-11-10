@@ -43,16 +43,9 @@ exports.run = async (client, message, args) => {
     );
   let authorChannel = message.member.voice.channel;
 
-  const premiumRoles = [];
-  premiumRoles.push("796590171024785439");
-  premiumRoles.push("808724777274572852");
-  premiumRoles.push("796588390614171669");
-  premiumRoles.push("796578476982665226");
-  premiumRoles.push("799856315601780749");
-  premiumRoles.push("796573435294908476");
-  premiumRoles.push("859128851001901108");
-  premiumRoles.push("859126964749205514");
-  premiumRoles.push("775898112979501106");
+  const premiumRoles = ["1037823207408934912", "1037823216707706930", "1037823225771593801", "1037823234982289508", "1037823243987464192", "1037823252925517894", "1037823511806357574", "1037823502461448313"]
+
+  
   let roles = [];
 
   for (const role of premiumRoles) {

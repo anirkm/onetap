@@ -138,7 +138,7 @@ exports.run = async (client, message, args) => {
     if (onetap.ownerID === ab.id) {
       return message.channel.send(
         textEmbed(
-          ":name_badge: | Action cancelled, you can't reject the channel owner (yourself lmao)"
+          ":name_badge: | Action cancelled, you can't reject the channel owner (yourself huh)"
         )
       );
     }

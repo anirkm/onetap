@@ -106,11 +106,13 @@ exports.run = async (client, message, args) => {
                   if (channel.type !== "voice") return;
                   if (channel.parent !== mainCate) return;
                   if (channel.name === "One Tap" && channel.position == 0) {
-                    try {
-                      await target.voice.setChannel(channel);
-                    } catch (err) {
-                      console.log(err);
-                    }
+                    setTimeout(async function () {
+                      try {
+                        await target.voice.setChannel(channel);
+                      } catch {
+                        return;
+                      }
+                    }, 300);
                   }
                 }
               });
@@ -131,7 +133,7 @@ exports.run = async (client, message, args) => {
       `:white_check_mark: | You've rejected ${desc} to have access to your channel.`
     );
 
-    return msg.edit(embed);
+    return msg.edit({ embeds: [embed] });
   } else {
     if (onetap.ownerID === ab.id) {
       return message.channel.send(
@@ -140,14 +142,28 @@ exports.run = async (client, message, args) => {
         )
       );
     }
+
     let verifiedRole = await message.guild.roles.cache.find(
-      (r) => r.id === "809087546088357908"
+      (r) => r.id === "1037823799502045204"
       //(r) => r.name === "Verified"
     );
+
+    let jailRole = await message.guild.roles.cache.find(
+      (r) => r.id === "1037823198361817088"
+      //(r) => r.name === "Verified"
+    );
+
     if (ab == verifiedRole) {
       return message.channel.send(
         textEmbed(
           `:x: | You cannot perform this action on the ${verifiedRole} role!`
+        )
+      );
+    }
+    if (ab == jailRole) {
+      return message.channel.send(
+        textEmbed(
+          `:x: | You cannot perform this action on the ${jailRole} role!`
         )
       );
     }
@@ -193,23 +209,31 @@ exports.run = async (client, message, args) => {
         }
       }
     } else if (ab instanceof Discord.Role) {
+      let membersWithRole = [];
       authorChannel.members.forEach((member) => {
         if (onetap.ownerID === member.id) return;
         if (member.roles.cache.some((role) => role === ab)) {
+          membersWithRole.push(member);
+        }
+      });
+      membersWithRole.forEach((member) => {
+        if (
+          member.voice.channel &&
+          member.voice.channel.id === onetap.channelID
+        ) {
           try {
             message.guild.channels.cache.map(async (channel) => {
               if (channel.parent === mainCate) {
                 if (channel.type !== "GUILD_VOICE") return;
                 if (channel.parent !== mainCate) return;
                 if (channel.name === "One Tap" && channel.position == 0) {
-                  try {
-                    await member.voice.setChannel(
-                      channel,
-                      `Rejected by ${authorChannel.tag}`
-                    );
-                  } catch (err) {
-                    console.log(err);
-                  }
+                  setTimeout(async function () {
+                    try {
+                      await member.voice.setChannel(channel);
+                    } catch {
+                      return;
+                    }
+                  }, 300);
                 }
               }
             });

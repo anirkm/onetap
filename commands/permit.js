@@ -75,7 +75,12 @@ exports.run = async (client, message, args) => {
     );
 
   let verifiedRole = await message.guild.roles.cache.find(
-    (r) => r.id === "809087546088357908"
+    (r) => r.id === "1037823799502045204"
+    //(r) => r.name === "Verified"
+  );
+
+  let jailRole = await message.guild.roles.cache.find(
+    (r) => r.id === "1037823198361817088"
     //(r) => r.name === "Verified"
   );
 
@@ -94,6 +99,13 @@ exports.run = async (client, message, args) => {
           return message.channel.send(
             textEmbed(
               `:x: | You cannot perform this action on the ${verifiedRole} role!`
+            )
+          );
+        }
+        if (target == jailRole) {
+          return message.channel.send(
+            textEmbed(
+              `:x: | You cannot perform this action on the ${jailRole} role!`
             )
           );
         }
@@ -125,19 +137,31 @@ exports.run = async (client, message, args) => {
       `:white_check_mark: | You have permitted ${desc} to have access to your channel.`
     );
 
-    return msg.edit(embed);
+    return msg.edit({ embeds: [embed] });
   } else {
     if (ab instanceof Discord.Role) {
       if (ab == verifiedRole) {
         return message.channel.send(
           textEmbed(
-            ":x: | You can only supply a Guild Member or a Discord Role."
+            `:x: | You cannot perform this action on the ${verifiedRole} role!`
           )
         );
       }
+      if (ab == jailRole) {
+        return message.channel.send(
+          textEmbed(
+            `:x: | You cannot perform this action on the ${jailRole} role!`
+          )
+        );
+      }
+      if (ab == message.guild.roles.everyone) {
+        return message.channel.send(
+          textEmbed(`:x: | You cannot perform this action on everyone :')`)
+        );
+      }
     }
-    authorChannel
-      .permissionOverwrites.edit(ab, { CONNECT: true, VIEW_CHANNEL: true, SPEAK: true })
+    authorChannel.permissionOverwrites
+      .edit(ab, { CONNECT: true, VIEW_CHANNEL: true, SPEAK: true })
       .then((test) => {
         message.reply(
           textEmbed(

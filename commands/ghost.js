@@ -18,7 +18,7 @@ exports.run = async (client, message, args) => {
   let guild = message.guild;
   let ided = message.guild.id;
   let verified = message.guild.roles.cache.find(
-    (r) => r.id === "1048422911825952898" //1037823799502045204
+    (r) => r.id === "1037823799502045204" //1037823799502045204
   );
 
   function textEmbed(text) {

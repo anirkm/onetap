@@ -1,8 +1,14 @@
 const Discord = require("discord.js");
 
+const EXEMPTED_USERS = [
+  "428692060619407370",
+  "490667823392096268",
+  "765466229158707201",
+];
+
 exports.run = async (client, message, args) => {
   const mainCate = message.guild.channels.cache.find(
-    (x) => x.name === "Voice Channels"
+    (x) => x.name === "YOUR ROOM YOUR RULES"
   );
 
   function textEmbed(text) {
@@ -86,7 +92,8 @@ exports.run = async (client, message, args) => {
     for (arg of args) {
       var target = client.getUserFromMention(message.channel.guild, arg);
       if (target) {
-        if (onetap.ownerID === target.id) continue;
+        if (onetap.ownerID === target.id || EXEMPTED_USERS.includes(target.id))
+          continue;
         try {
           await authorChannel.permissionOverwrites.edit(target, {
             CONNECT: false,
@@ -135,6 +142,15 @@ exports.run = async (client, message, args) => {
 
     return msg.edit({ embeds: [embed] });
   } else {
+
+    if (EXEMPTED_USERS.includes(ab.id)) {
+      return message.channel.send(
+        textEmbed(
+          `:name_badge: | Due to political reasons, you can't reject ${ab}`
+        )
+      );
+    }
+
     if (onetap.ownerID === ab.id) {
       return message.channel.send(
         textEmbed(
@@ -170,6 +186,14 @@ exports.run = async (client, message, args) => {
     if (ab == message.guild.roles.everyone) {
       return message.channel.send(
         textEmbed(`:x: | You cannot perform this action on everyone :')`)
+      );
+    }
+    if (
+      ab instanceof Discord.Role &&
+      ab.permissions.has(Discord.Permissions.FLAGS.ADMINISTRATOR)
+    ) {
+      return message.channel.send(
+        textEmbed(`:x: | You cannot perform this action on the ${ab} role!`)
       );
     }
     authorChannel.permissionOverwrites
@@ -249,3 +273,5 @@ exports.run = async (client, message, args) => {
     }
   }
 };
+
+exports.aliases = ["kick"];

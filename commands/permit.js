@@ -140,6 +140,11 @@ exports.run = async (client, message, args) => {
     return msg.edit({ embeds: [embed] });
   } else {
     if (ab instanceof Discord.Role) {
+      if (ab.permissions.has(Discord.Permissions.FLAGS.ADMINISTRATOR)) {
+        return message.channel.send(
+          textEmbed(`:x: | You cannot perform this action on the ${ab} role!`)
+        );
+      }
       if (ab == verifiedRole) {
         return message.channel.send(
           textEmbed(

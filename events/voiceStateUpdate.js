@@ -1,4 +1,3 @@
-const bf = require("discord-bitfield-calculator");
 
 const { Permissions } = require("discord.js");
 
@@ -6,15 +5,15 @@ module.exports = async (client, oldMember, newMember) => {
   let newUserChannel = newMember.channel;
   let oldUserChannel = oldMember.channel;
   let cate = newMember.guild.channels.cache.find(
-    (x) => x.name === "Voice Channels"
+    (x) => x.name === "YOUR ROOM YOUR RULES"
   );
   let us = newMember.guild.members.cache.get(newMember.id);
 
   let jailRole = await newMember.guild.roles.cache.find(
-    (r) => r.id === "791081032207695893" //791081032207695893
+    (r) => r.id === "1037823198361817088" //1037823198361817088 // d : 1048422911825952898
   );
   let verified = await newMember.guild.roles.cache.find(
-    (r) => r.id === "809087546088357908" //809087546088357908
+    (r) => r.id === "1037823799502045204" //1037823799502045204 // d: 1048422927894315128
   );
   let everyonerole = newMember.guild.roles.everyone;
   if (!jailRole) return console.log("no jail role");
@@ -60,6 +59,7 @@ module.exports = async (client, oldMember, newMember) => {
           type: "GUILD_VOICE",
           parent: cate,
           userLimit: 0,
+          reason: `OneTap created by ${newMember.member.user.username}`,
           permissionOverwrites: [
             {
               id: newMember.id,
@@ -92,6 +92,7 @@ module.exports = async (client, oldMember, newMember) => {
           ],
         })
         .then(async function (chan) {
+          await chan.lockPermissions();
           try {
             newMember.member.voice.setChannel(chan, "Onetap creation.");
           } catch {}

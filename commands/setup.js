@@ -35,7 +35,7 @@ exports.run = async (client, message, args) => {
   function makeMainChannel() {
     try {
       let categ = message.guild.channels.cache.find(
-        (x) => x.name === "Voice Channels"
+        (x) => x.name === "YOUR ROOM YOUR RULES"
       );
       message.guild.channels.create("One Tap", {
         type: "voice",
@@ -54,7 +54,7 @@ exports.run = async (client, message, args) => {
   }
 
   let categ = message.guild.channels.cache.find(
-    (x) => x.name === "Voice Channels"
+    (x) => x.name === "YOUR ROOM YOUR RULES"
   );
 
   if (categ) {

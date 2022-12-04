@@ -1,4 +1,3 @@
-
 const { Permissions } = require("discord.js");
 
 module.exports = async (client, oldMember, newMember) => {
@@ -60,39 +59,15 @@ module.exports = async (client, oldMember, newMember) => {
           parent: cate,
           userLimit: 0,
           reason: `OneTap created by ${newMember.member.user.username}`,
-          permissionOverwrites: [
-            {
-              id: newMember.id,
-              allow: [
-                "CONNECT",
-                "VIEW_CHANNEL",
-                "SPEAK",
-                "CREATE_INSTANT_INVITE",
-              ],
-            },
-            {
-              id: jailRole,
-              deny: [
-                "CONNECT",
-                "SPEAK",
-                "VIEW_CHANNEL",
-                "MUTE_MEMBERS",
-                "MANAGE_ROLES",
-                "CREATE_INSTANT_INVITE",
-              ],
-            },
-            {
-              id: everyonerole,
-              deny: ["VIEW_CHANNEL"],
-            },
-            {
-              id: verified,
-              allow: ["VIEW_CHANNEL"],
-            },
-          ],
         })
         .then(async function (chan) {
           await chan.lockPermissions();
+          await chan.permissionOverwrites.edit(newMember.id, {
+            "CONNECT": true,
+            "VIEW_CHANNEL": true,
+            "SPEAK": true,
+            "CREATE_INSTANT_INVITE": true,
+          });
           try {
             newMember.member.voice.setChannel(chan, "Onetap creation.");
           } catch {}

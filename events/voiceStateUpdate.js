@@ -131,8 +131,8 @@ module.exports = async (client, oldMember, newMember) => {
                 "Onetap creation."
               );
             })
-            .catch(() => {
-              return console.log("err at create channel");
+            .catch((e) => {
+              return console.log("err at create channel", e);
             });
         },
         { user: `${newMember.member.user.username}` }

@@ -2,6 +2,7 @@ const { Client, Collection } = require("discord.js");
 const { token, prefix, dev } = require("./config");
 const db = require("./utils/DBInit.js");
 const fs = require("fs");
+const queue = require("./utils/queue");
 
 const client = new Client({
   intents: [
@@ -89,3 +90,5 @@ client.on("error", console.error);
 client.on("warn", console.warn);
 
 client.login(token);
+
+queue.startTasks();

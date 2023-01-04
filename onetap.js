@@ -90,5 +90,4 @@ client.on("error", console.error);
 client.on("warn", console.warn);
 
 client.login(token);
-
 queue.startTasks();
